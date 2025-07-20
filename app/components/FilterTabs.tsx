@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setFilter, FilterType } from "@/lib/store/todoSlice";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function FilterTabs() {
   const dispatch = useAppDispatch();
@@ -10,17 +10,22 @@ export default function FilterTabs() {
 
   const filters: FilterType[] = ["all", "active", "done"];
 
+  const handleChange = (value: string) => {
+    dispatch(setFilter(value as FilterType));
+  };
+
   return (
-    <div className="flex gap-2">
+    <Tabs value={currentFilter} onValueChange={handleChange} className="w-full">
+      <TabsList>
+        {filters.map((filter) => (
+          <TabsTrigger key={filter} value={filter}>
+            {filter.toUpperCase()}
+          </TabsTrigger>
+        ))}
+      </TabsList>
       {filters.map((filter) => (
-        <Button
-          key={filter}
-          variant={filter === currentFilter ? "default" : "outline"}
-          onClick={() => dispatch(setFilter(filter))}
-        >
-          {filter.toUpperCase()}
-        </Button>
+        <TabsContent key={filter} value={filter}></TabsContent>
       ))}
-    </div>
+    </Tabs>
   );
 }
